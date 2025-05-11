@@ -1,57 +1,64 @@
-const express = require('express')
-const axios = require("axios")
-const cheerio = require("cheerio")
-const { json } = require('body-parser')
-const app = express()
-const port = 3000
+const express = require('express');
+const axios = require('axios');
+const cheerio = require('cheerio');
 
+const app = express();
+const port = 3000;
+const TARGET_URL = 'https://technext.github.io/furn./';
+
+// Root route
 app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
-app.get("/newarrivals", async function(req, res) {  
-    let newArrival = await ExtractData('newArrival'); 
-    res.send(newArrival);
+  res.send('Hello World!');
 });
 
-app.get("/featureproducts", async function(req, res) {       
-    let newArrival = await ExtractData('featureProducts'); 
-    res.send(newArrival);
+// New Arrivals
+app.get('/newarrivals', async (req, res) => {
+  try {
+    const data = await extractData('newArrival');
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Failed to fetch new arrivals');
+  }
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+// Featured Products
+app.get('/featureproducts', async (req, res) => {
+  try {
+    const data = await extractData('featureProducts');
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Failed to fetch featured products');
+  }
+});
 
+// Scraping logic
+async function extractData(type) {
+  const response = await axios.get(TARGET_URL);
+  const $ = cheerio.load(response.data);
+  const results = [];
 
+  if (type === 'newArrival') {
+    $('.single-new-arrival').each((_, el) => {
+      const product = $(el).find('h4 > a').text().trim();
+      const price = $(el).find('.arrival-product-price').text().trim();
+      results.push({ product, price });
+    });
+  }
 
-async function ExtractData(type)
-{
-    let website = await axios.get('https://technext.github.io/furn./');
-    let data=[];
-    var $ = cheerio.load(website.data);
-    switch (type) {
-        case 'newArrival':               
-            $('.single-new-arrival').each(function (index, element) {
-                let product = $(this).find('h4 >a ');
-                let price = $(this).find('.arrival-product-price');
-                data.push({
-                    'product' : $(product).text(),
-                    'price' : $(price).text()
-                });
-            });   
-            break;
-        case 'featureProducts':               
-            $('.single-feature-txt').each(function (index, element) {
-                let product = $(this).find('h3 >a ');
-                let price = $(this).find('h5');
+  if (type === 'featureProducts') {
+    $('.single-feature-txt').each((_, el) => {
+      const product = $(el).find('h3 > a').text().trim();
+      const price = $(el).find('h5').text().trim();
+      results.push({ product, price });
+    });
+  }
 
-                data.push({
-                    'product' : $(product).text(),
-                    'price' : $(price).text()
-                });
-            });   
-            break;            
-    }
-    return data;
+  return results;
 }
+
+// Start server
+app.listen(port, () => {
+  console.log(`🚀 Server running at http://localhost:${port}`);
+});
