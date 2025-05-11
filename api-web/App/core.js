@@ -1,33 +1,36 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client'; // ✅ Updated for React 18
+import { Route, Routes, HashRouter } from 'react-router-dom'; // ✅ Added Routes
 import HomePage from './Pages/HomePage';
 import EventCreate from './Pages/Event_Create';
 import EventList from './Pages/Event_List';
 import EventPolibot from './Pages/Event_Polibot';
-import {Route,HashRouter } from 'react-router-dom';
 import Header from "./Component/Header";
 import Footer from "./Component/Footer";
-import '../vendor/bootstrap/css/bootstrap.min.css';
+import { createRoot } from 'react-dom/client';
 import '../css/one-page-wonder.min.css';
 import '../vendor/custom/global.css';
-import '../vendor/bootstrap/js/bootstrap.bundle.min.js';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const BaseLayout = () => (
-    <div>
-        <Header/>
-            <div className="base">
-                <Route path="/" exact component={HomePage} />
-                <Route path="/Event/Create" component={EventCreate} />
-                <Route path="/Event/List" component={EventList} />
-                <Route path="/Event/Polibot" component={EventPolibot} />
-            </div>
-        <Footer/>
+  <div>
+    <Header />
+    <div className="base">
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/Event/Create" element={<EventCreate />} />
+        <Route path="/Event/List" element={<EventList />} />
+        <Route path="/Event/Polibot" element={<EventPolibot />} />
+      </Routes>
     </div>
-)
+    <Footer />
+  </div>
+);
 
-const app = document.getElementById('app');
-ReactDOM.render((
-    <HashRouter>
-        <BaseLayout />
-    </HashRouter>
-), app);
+const root = createRoot(document.getElementById('app'));
+root.render(
+  <HashRouter>
+    <BaseLayout />
+  </HashRouter>
+);
