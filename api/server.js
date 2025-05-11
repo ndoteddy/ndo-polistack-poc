@@ -1,64 +1,70 @@
-var dotenv = require('dotenv');
-const myEnv = dotenv.config();
-var express = require ('express'),
-    app = express (),
-    port = process.env.PORT || 3000,
-    mongoose = require('mongoose'),
-    Task = require ('./api/models/eventModel'),
-    bodyParser=require('body-parser');
+require('dotenv').config();
 
-app.use(function(req, res, next) {
-    // var allowedOrigins = ['http://127.0.0.1:3000', 'http://localhost:3000', 'http://127.0.0.1:8080', 'http://localhost:8080'];
-    // var origin = req.headers.origin;
-    // if(allowedOrigins.indexOf(origin) > -1){
-    //     res.setHeader('Access-Control-Allow-Origin', origin);
-    // }
-    // Website you wish to allow to connect
+const express = require('express');
+const bodyParser = require('body-parser');
+const routes = require('./api/routes/mainroutes');
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
-
-    // Request headers you wish to allow
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
     res.header('Access-Control-Allow-Credentials', true);
-
-
-
     next();
-
 });
-// mongoose instance connection url connection
-mongoose.Promise = global.Promise;
-//const url = 'mongodb://localhost/polistack';
-const url = 'mongodb://'+process.env.DB_USER+':'+process.env.DB_PASS+process.env.DB_URL;
 
-console.log(url);
-//====MONGOOSE CONNECT===//
-mongoose.connect(url, function (err, db) {
-    if (err) {
-        console.log('Unable to connect to the mongoDB server. Error:', err);
-    } else {
-        console.log('Connection established to', url);
+// Mock data for events (Simulating MongoDB data)
+const mockEvents = [
+    {
+        eventTitle: "Tech Conference 2025",
+        address: "123 Tech Avenue, Silicon Valley, CA",
+        desc: "A conference about the future of technology.",
+        totalGuest: 500,
+        createdDate: "2025-06-15",
+        venueName: "Tech Arena",
+        organizerName: "Tech World Inc."
+    },
+    {
+        eventTitle: "Health and Wellness Expo",
+        address: "456 Wellness St, Los Angeles, CA",
+        desc: "A convention focused on health and wellness.",
+        totalGuest: 300,
+        createdDate: "2025-07-10",
+        venueName: "Wellness Center",
+        organizerName: "Wellness Co."
     }
-});
-//==========================//
+];
 
+// Replace mongoose code with mock data
+// const dbUrl = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}${process.env.DB_URL}`;
+// console.log(dbUrl);
 
+// mongoose.Promise = global.Promise;
+// mongoose.connect(dbUrl, (err) => {
+//     if (err) {
+//         console.error('Unable to connect to the mongoDB server. Error:', err);
+//     } else {
+//         console.log('Connection established to', dbUrl);
+//     }
+// });
+
+// Simulate retrieving events from database (mock)
+const getEvents = (req, res) => {
+    res.json(mockEvents);
+};
+
+// Routes setup
+routes(app);
+
+// Example route to get all events
+app.route('/event')
+    .get(getEvents);
+
+// Middleware to parse JSON and urlencoded data
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
-var routes = require('./api/routes/mainroutes'); //importing route
-routes(app); //register the route
-
-
-
-
-app.listen(port);
-
-
-
-
-
-
-
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});

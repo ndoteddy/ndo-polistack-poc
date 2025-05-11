@@ -1,13 +1,19 @@
 'use strict';
-module.exports = function(app) {
-    var event = require('../controllers/event_controller');
-    var scrappingExternalEvent = require('../controllers/event_scrapper_controller');
-    // to event controller (mongo database data)
-    app.route('/event')
-        .get(event.list_all_events)
-        .post(event.create_a_event);
 
-    // to scrapping controller (external website data)
+module.exports = function(app) {
+    // Mocking the controllers for testing
+    const real_eventController = require('../controllers/event_controller');
+    const real_scrappingController = require('../controllers/event_scrapper_controller');
+
+    const mock_eventController = require('../controllers/mock_event_controller');
+    const mock_scrappingController = require('../controllers/mock_event_scrapper_controller');
+
+    // Routes for event controller (MongoDB data)
+    app.route('/event')
+        .get(real_scrappingController.list_all_event_scrapping)   // This will now use the mocked data
+        .post(mock_eventController.create_a_event);  // Mock the creation process
+
+    // Route for scrapping controller (external website data)
     app.route('/event/scrapping')
-        .get(scrappingExternalEvent.list_all_event_scrapping);
+        .get(mock_scrappingController.list_all_event_scrapping);  // Mock scrapping data
 };

@@ -1,29 +1,32 @@
-'use strict'
+'use strict';
+var Event = require('../models/eventModel');  // Adjust the path if needed
 
-var mongoose = require ('mongoose'),
-    EventSchema = mongoose.model('EventSchema');
-
-exports.list_all_events = function(req,res) {
-    EventSchema.find({}, function (err, signature) {
-        if (err)
+// List all events
+exports.list_all_events = function(req, res) {
+    Event.find({}, function(err, events) {
+        if (err) {
             res.send(err);
-        res.json(signature);
+        }
+        res.json(events);
     });
 };
 
-exports.create_a_event = function(req,res) {
-    var eventSchema = new EventSchema({
+// Create a new event
+exports.create_a_event = function(req, res) {
+    var newEvent = new Event({
         eventTitle: req.body.eventTitle,
         address: req.body.address,
         desc: req.body.desc,
         totalGuest: req.body.totalGuest,
         createdDate: req.body.createdDate,
         venueName: req.body.venueName,
-        organizerName: req.body.organizerName,
+        organizerName: req.body.organizerName
     });
-    eventSchema.save(function(err, sign) {
-        if (err)
+
+    newEvent.save(function(err, event) {
+        if (err) {
             res.send(err);
-        res.json(sign);
+        }
+        res.json(event);
     });
 };
