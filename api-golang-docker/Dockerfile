@@ -1,23 +1,42 @@
-FROM golang:1.12.9-alpine3.10
-# Add Maintainer Info
-LABEL maintainer="nando teddy <nando.teddy@gmail.com>"
+# ----- Build Stage -----
+FROM golang:1.21-alpine AS builder
 
-# Set the Current Working Directory inside the container
+# Add Maintainer Info
+LABEL maintainer="nando teddy"
+
+# Install git for modules that require it
+RUN apk add --no-cache git
+
+# Set working directory inside container
 WORKDIR /app
 
-# Copy go mod and sum files
+# Copy go.mod and go.sum files
 COPY go.mod go.sum ./
 
-# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
+# Download dependencies
 RUN go mod download
 
-# Copy the source from the current directory to the Working Directory inside the container
+# Copy the rest of the application source code
 COPY . .
 
-# Build the Go app
+# Build the Go application
 RUN go build -o main .
 
-# Expose port 8080 to the outside world
+# ----- Run Stage -----
+FROM alpine:latest
+
+# Create non-root user (optional for security)
+RUN adduser -D appuser
+
+WORKDIR /app
+
+# Copy the compiled binary from the build stage
+COPY --from=builder /app/main .
+
+# Use non-root user
+USER appuser
+
+# Expose port
 EXPOSE 8080
 
 # Command to run the executable

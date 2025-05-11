@@ -9,28 +9,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func main() {
-	// use PORT environment variable, or default to 8080
-	port := "8080"
-	if fromEnv := os.Getenv("PORT"); fromEnv != "" {
-		port = fromEnv
-	}
-
-	router := mux.NewRouter()
-	restaurant = append(restaurant,
-		Restaurant{ID: "1", Name: "Ayam Super Nando", Address: "Jalan Bulan 10th Kuala Lumpur", Follower: &Follower{Total: "10", Like: "5"}})
-	restaurant = append(restaurant,
-		Restaurant{ID: "2", Name: "Kopi Hoho Nando", Address: "Central Boulevard 20th Singapore ", Follower: &Follower{Total: "25", Like: "2"}})
-
-	router.HandleFunc("/restaurant", GetRestaurantsEndpoint).Methods("GET")
-	router.HandleFunc("/restaurant/{id}", GetRestaurantEndpoint).Methods("GET")
-
-	// start the web server on port and accept requests
-	log.Printf("Server listening on port %s", port)
-	err := http.ListenAndServe(":"+port, router)
-	log.Fatal(err)
-}
-
+// Models
 type Restaurant struct {
 	ID       string    `json:"id,omitempty"`
 	Name     string    `json:"name,omitempty"`
@@ -43,19 +22,67 @@ type Follower struct {
 	Like  string `json:"like,omitempty"`
 }
 
-var restaurant []Restaurant
+// Handler with in-memory data
+type APIHandler struct {
+	restaurants []Restaurant
+}
 
-func GetRestaurantEndpoint(w http.ResponseWriter, req *http.Request) {
-	params := mux.Vars(req)
-	for _, item := range restaurant {
-		if item.ID == params["id"] {
-			json.NewEncoder(w).Encode(item)
+func main() {
+	port := getPort()
+
+	handler := &APIHandler{
+		restaurants: []Restaurant{
+			{
+				ID: "1", Name: "Ayam Super Nando",
+				Address: "Jalan Bulan 10th Kuala Lumpur",
+				Follower: &Follower{Total: "10", Like: "5"},
+			},
+			{
+				ID: "2", Name: "Kopi Hoho Nando",
+				Address: "Central Boulevard 20th Singapore",
+				Follower: &Follower{Total: "25", Like: "2"},
+			},
+		},
+	}
+
+	router := mux.NewRouter()
+	handler.registerRoutes(router)
+
+	log.Printf("Server listening on port %s", port)
+	log.Fatal(http.ListenAndServe(":"+port, router))
+}
+
+func getPort() string {
+	if port := os.Getenv("PORT"); port != "" {
+		return port
+	}
+	return "8080"
+}
+
+func (h *APIHandler) registerRoutes(router *mux.Router) {
+	router.HandleFunc("/restaurant", h.getAllRestaurants).Methods("GET")
+	router.HandleFunc("/restaurant/{id}", h.getRestaurantByID).Methods("GET")
+}
+
+func (h *APIHandler) getAllRestaurants(w http.ResponseWriter, r *http.Request) {
+	h.respondWithJSON(w, http.StatusOK, h.restaurants)
+}
+
+func (h *APIHandler) getRestaurantByID(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+	for _, rest := range h.restaurants {
+		if rest.ID == id {
+			h.respondWithJSON(w, http.StatusOK, rest)
 			return
 		}
 	}
-	json.NewEncoder(w).Encode(&Restaurant{})
+	h.respondWithJSON(w, http.StatusNotFound, map[string]string{"error": "Restaurant not found"})
 }
 
-func GetRestaurantsEndpoint(w http.ResponseWriter, req *http.Request) {
-	json.NewEncoder(w).Encode(restaurant)
+func (h *APIHandler) respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	if err := json.NewEncoder(w).Encode(payload); err != nil {
+		log.Printf("Error encoding JSON response: %v", err)
+	}
 }
