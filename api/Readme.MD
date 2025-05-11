@@ -1,104 +1,124 @@
-# Project Polistack
 
+# Project Polistack API
 
-[![Build Status](https://travis-ci.org/ndoteddy/Project-Polistack-API.svg?branch=master)](https://travis-ci.org/ndoteddy/Project-Polistack-API) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/ndoteddy/Project-Polistack-API/issues)  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/ndoteddy/ndo-polistack-poc/issues)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+---
 
 ## Background
-Nowadays, to learn and stay sharp with current edge of technology is very challenging.
-In this repository i have put my Proof Of Concept about Event Planner
-with ReactJS as main technology and NodeJs Express as main API. 
 
-We plan to use Microservices (Service Oriented Architecture) - so all module 
-will have less dependency and with React Component it makes system can be extend or reuse easily.
-Off course with API we can integrate it With Mobile apps as well. (Either native or ReactNative) 
+Staying up to date with modern technology is challenging. This project serves as a **Proof of Concept (PoC)** for an **Event Planner System**, using **ReactJS** for the frontend and **Node.js (Express)** for the backend API.
 
-Current objective : **Event Planner API v0.0.2**
+We aim to implement a **microservices-oriented architecture**, ensuring low coupling between modules. With reusable React components and APIs, integration with mobile apps (native or React Native) is seamless.
 
-You can use this repository and join with me to create a community.Sharing is caring.
+**Current Objective:** `Event Planner API v0.0.2`
 
-Wanna discuss or collaborate together kindly Drop a message 
+Join the project and help build a collaborative community — sharing is caring!
 
-author : nando teddy
+**Author:** Nando Teddy
 
-e-mail : nando.teddy@gmail.com
+---
 
+## 📚 Table of Contents
 
-
-## Table of Contents
 * [Objective](#objective)
 * [Prerequisite](#prerequisite)
 * [Contributing](#contributing)
-* [CurrentVersion](#currentversion)
+* [Current Version](#currentversion)
 
-## Objective
+---
 
-1. Create Event Planner System
-2. Use Agile Methodology
-3. Use ReactJs as Main Core Technology
-4. Use NodeJs as Main API Layer Architecture
-5. Use Microservices Architecture
-6. Use CI (Continous Integration) Tools Like Jenkin or Teamcity
-7. Proficient to estimate Complexity Of Program
-8. Able to make Software Ecosystem From Web Apps until Mobile Apps
-9. Able to Analyze Security Vulnerability
-    
+## 🎯 Objective
 
-## Prerequisite
+1. Build an Event Planner System
+2. Apply Agile Methodology
+3. Use ReactJS as the primary frontend framework
+4. Use NodeJS (Express) as the API backend
+5. Implement Microservices Architecture
+6. Integrate CI tools like Jenkins or TeamCity
+7. Practice effort estimation and software planning
+8. Create an extensible software ecosystem (web & mobile)
+9. Address and analyze application security vulnerabilities
 
-1.  For this repository u need to install following software 
-    - NPM with NodeJS - https://nodejs.org/en/    
-    - ReactJs - https://reactjs.org/tutorial/tutorial.html
-    - Git For Windows (Bash) - https://git-scm.com/download/win
-    - WebStorm - https://www.jetbrains.com/webstorm/    
-    - Postman - https://www.getpostman.com/
-    
-2. Clone or Fork This repository
+---
 
-        v0.0.2 - > https://github.com/ndoteddy/Project-Polistack-API
-    
-3.  Npm package manager will auto download node module for u according a Json Package
-     - clone this repository
-     - go to your directory using terminal (KDE/UBUNTU/OSX) or Command Prompt (Windows) 
-     - make sure npm already installed
-     - npm install
-     - this website use webpack and hot loader - u can customize the port in webpack.config.js     
-     - npm start
-     
-4. Happy coding
+## 💻 Prerequisite
 
-5. Hosting    
-    - Heroku - NodeJS | React https://heroku.com/
-    
-## Contributing
-    Fork it
-    Create your feature branch (git checkout -b my-new-feature)
-    Commit your changes (git commit -am 'Add some feature')
-    Push to the branch (git push origin my-new-feature)
-    Create new Pull Request
-See [Contributing](CONTRIBUTING.md) and  List of our contributor here [Contributors](https://github.com/ndoteddy/Project-Polistack-API/graphs/contributors)
+### 1. Software Requirements
 
+* [Node.js (NPM)](https://nodejs.org/en/)
+* [ReactJS](https://reactjs.org/tutorial/tutorial.html)
+* [Git](https://git-scm.com/download/win)
+* [WebStorm](https://www.jetbrains.com/webstorm/) (optional)
+* [Postman](https://www.postman.com/)
 
-## CurrentVersion          
+### 2. Repository Access
 
-0.0.2 - > Add Scrapping Controller to Scrap  External Website Data (example: http://www.allconferences.com/)
-          
-            - Add "request" HTTP Package
-            - Add "cheerio" Package
-            - Setup Router For Scrapper External Website
-            - Extract to Json Response
-            - Add promise callback
-            
+```bash
+# Clone or fork the API repo (v0.0.2)
+git clone https://github.com/ndoteddy/ndo-polistack-poc.git
+cd ndo-polistack-poc/api
+```
 
-0.0.1 - > Init Repo and Server Routing 
-            
-            - NPM Install
-            - Dependencies
-            - Setup Express
-            - Setup Babel Transpiler With Webpack Hotloader
-            - Init travis CLI - CI
-            - Setup Mongo DB Connection Key
-             
-          
+### 3. Setup and Run
 
+```bash
+# Install dependencies
+npm install
 
+# Start the development server (uses Webpack + Hot Reloading)
+npm start
+```
+
+> 🔧 You can customize the development port in `webpack.config.js`.
+
+---
+
+## 🤝 Contributing
+
+```bash
+# Fork it
+# Create your feature branch
+git checkout -b my-new-feature
+
+# Commit your changes
+git commit -am "Add some feature"
+
+# Push to the branch
+git push origin my-new-feature
+
+# Create a new Pull Request
+```
+
+More details in [CONTRIBUTING.md](CONTRIBUTING.md)
+Meet our awesome contributors: [Contributors](https://github.com/ndoteddy/ndo-polistack-poc/graphs/contributors)
+
+---
+
+## 🧩 Current Version
+
+### `v0.0.2`
+
+* Added **Scraping Controller** for extracting data from external sources (e.g., [AllConferences](https://hongkongcheapo.com/events/))
+* Integrated packages:
+
+  * `request` (HTTP client)
+  * `cheerio` (HTML parsing)
+* JSON response format
+* Promise-based async handling
+
+### `v0.0.1`
+
+* Initial repo and server routing setup
+* Configured:
+
+  * NPM & dependencies
+  * Express server
+  * Babel transpiler with Webpack Hot Loader
+  * Travis CI integration
+  * MongoDB connection setup
+
+---
+
+Let me know if you’d like the README in `.md` format or want badges, sections, or language translations added.
